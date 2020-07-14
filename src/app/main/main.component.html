@@ -1,0 +1,60 @@
+<button mat-raised-button>Добавить позицию</button><button mat-raised-button>Добавить раздел</button>
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <!-- This is the tree node template for leaf nodes -->
+  <mat-tree-node *matTreeNodeDef="let node;" matTreeNodePadding>
+    <!-- use a disabled button to provide padding for tree leaf -->
+    <button mat-icon-button disabled></button>
+    <button mat-icon-button cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="node.layoutVisible = !node.layoutVisible">edit</button>
+    {{node.name}}
+    {{node.sale ? node.sale + ' р.' : ''}}
+    <ng-template
+      cdkConnectedOverlay
+      cdkConnectedOverlayHeight="100"
+      cdkConnectedOverlayWidth="100"
+      [cdkConnectedOverlayPositions]="overlayPositions"
+      [cdkConnectedOverlayOrigin]="trigger"
+      [cdkConnectedOverlayOpen]="node.layoutVisible"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      [cdkConnectedOverlayBackdropClass]="'cdk-backdrop'"
+      (backdropClick)="node.layoutVisible = false"
+    >
+      <ng-container>
+        <div class="block">
+          <div class="content" (click)="edit(node, 'position')">Редактировать</div>
+          <div class="content" (click)="remove(node, 'position')">Удалить</div>
+        </div>
+      </ng-container>
+    </ng-template>
+  </mat-tree-node>
+  <!-- This is the tree node template for expandable nodes -->
+  <mat-tree-node *matTreeNodeDef="let node;when: hasChild; let i = index" matTreeNodePadding>
+    <button mat-icon-button matTreeNodeToggle
+            [attr.aria-label]="'toggle ' + node.name">
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    <button mat-icon-button cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="node.layoutVisible = !node.layoutVisible">edit</button>
+    {{node.name}}
+    <ng-template
+      cdkConnectedOverlay
+      cdkConnectedOverlayHeight="100"
+      cdkConnectedOverlayWidth="100"
+      [cdkConnectedOverlayPositions]="overlayPositions"
+      [cdkConnectedOverlayOrigin]="trigger"
+      [cdkConnectedOverlayOpen]="node.layoutVisible"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      [cdkConnectedOverlayBackdropClass]="'cdk-backdrop'"
+      (backdropClick)="node.layoutVisible = false"
+    >
+      <ng-container>
+        <div class="block">
+          <div class="content" (click)="add(node, 'position')">Добавить позицию</div>
+          <div class="content" (click)="add(node, 'section')">Добавить раздел меню</div>
+          <div class="content" (click)="edit(node, 'section')">Редактировать</div>
+          <div class="content" (click)="remove(node)">Удалить</div>
+        </div>
+      </ng-container>
+    </ng-template>
+  </mat-tree-node>
+</mat-tree>

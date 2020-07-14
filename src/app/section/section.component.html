@@ -1,0 +1,8 @@
+<h2>{{treeAction === 0 ? 'Добавить' : 'Редактировать'}} раздел меню</h2>
+<form *ngIf="currentObj" [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <input matInput type="text" maxlength="255" formControlName="name" placeholder="Название">
+  </mat-form-field>
+</form>
+
+<button mat-raised-button (click)="save()">Сохранить</button>

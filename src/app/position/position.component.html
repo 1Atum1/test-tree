@@ -1,0 +1,13 @@
+<h2>{{treeAction === 0 ? 'Добавить' : 'Редактировать'}} позицию</h2>
+<form [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <input matInput type="text" maxlength="255" formControlName="name" placeholder="Название">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <input matInput type="number" maxlength="255" formControlName="sale" placeholder="Цена">
+  </mat-form-field>
+
+</form>
+
+<button mat-raised-button (click)="save()">Сохранить</button>
