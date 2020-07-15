@@ -20,12 +20,7 @@ interface ExampleFlatNode {
 })
 export class MainComponent implements OnInit, OnDestroy {
 
-  public treeData;
-
-  dataSourceClone;
-
   private _transformer = (node, level: number) => {
-    // console.log(node);
     return {
       expandable: !!node.sections && node.sections.length > 0 || !!node.items && node.items.length > 0,
       name: node.name,
