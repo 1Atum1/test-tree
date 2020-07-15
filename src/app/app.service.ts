@@ -119,12 +119,6 @@ export class AppService {
 
   constructor() {}
 
-  public initData: Data[] = [{
-    items: [],
-    name: '',
-    sections: []
-  }];
-
   public data$: BehaviorSubject<Data[]> = new BehaviorSubject<Data[]>(MOCKED_DATA);
   public data$$ = this.data$.asObservable();
 

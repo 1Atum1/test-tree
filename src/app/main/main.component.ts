@@ -49,8 +49,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   constructor(
     public appService: AppService,
-    private router: Router,
-    private shared: Shared
+    private router: Router
   ) {}
 
   ngOnInit() {

@@ -2,13 +2,13 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.23.
 
-###что использовалось:
+### что использовалось:
 
 - Angular Material (MatTree, MatButton, MatIcon, MatFormField, MatInput)
 - ReactiveForms
 - CDK (Overlay)
 
-###что реализовано:
+### что реализовано:
 
 - дерево имеющее разделы и позиции
 - добавление и редактирование разделов и позиций
