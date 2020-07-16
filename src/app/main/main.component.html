@@ -1,5 +1,5 @@
 <button mat-raised-button>Добавить позицию</button><button mat-raised-button>Добавить раздел</button>
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+<mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl">
   <!-- This is the tree node template for leaf nodes -->
   <mat-tree-node *matTreeNodeDef="let node;" matTreeNodePadding>
     <!-- use a disabled button to provide padding for tree leaf -->
@@ -52,7 +52,7 @@
           <div class="content" (click)="add(node, 'position')">Добавить позицию</div>
           <div class="content" (click)="add(node, 'section')">Добавить раздел меню</div>
           <div class="content" (click)="edit(node, 'section')">Редактировать</div>
-          <div class="content" (click)="remove(node)">Удалить</div>
+          <div class="content" (click)="remove(node, 'section')">Удалить</div>
         </div>
       </ng-container>
     </ng-template>

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AppService} from '../app.service';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
@@ -19,6 +19,8 @@ interface ExampleFlatNode {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainComponent implements OnInit, OnDestroy {
+
+  @ViewChild('tree', {static: true}) private tree;
 
   private _transformer = (node, level: number) => {
     return {
@@ -47,10 +49,13 @@ export class MainComponent implements OnInit, OnDestroy {
     overlayY: 'top',
   }];
 
+  removeObjIndex;
+
   constructor(
     public appService: AppService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
 
@@ -86,9 +91,34 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   remove(node, component) {
-    this.navigation(component);
-    this.appService.node$.next({node, action: TreeActions.remove});
+    node.layoutVisible = false;
+    if (node.level === 0) {
+      this.removeObjIndex = this.dataSource.data.findIndex(v => v.name === node.node.name);
+      this.dataSource.data.splice(this.removeObjIndex, 1);
+    } else {
+      if (component === 'section') {
+        this.removeSection(node.node, this.dataSource.data);
+      }
+    }
+    this.appService.data$.next(this.dataSource.data);
   }
+
+  removeSection(val, arr) {
+    for (const i of arr) {
+      this.removeObjIndex = arr.findIndex(v => v.name === val.name);
+      if (this.removeObjIndex !== -1) {
+        arr.splice(this.removeObjIndex, 1);
+      } else if (i.sections) {
+        this.removeSection(val, i.sections);
+      }
+    }
+  }
+
+  refreshTree(node) {
+    this.treeControl.collapse(node);
+    this.treeControl.expand(node);
+  }
+
 
   navigation(component) {
     if (component === 'position') {
