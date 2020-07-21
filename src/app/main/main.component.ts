@@ -49,7 +49,10 @@ export class MainComponent implements OnInit, OnDestroy {
     overlayY: 'top',
   }];
 
-  removeObjIndex;
+  sectionRemoveIndex;
+  positionRemoveItemIndex;
+  positionRemoveItemInSectionIndex;
+  expandedNodes;
 
   constructor(
     public appService: AppService,
@@ -92,31 +95,61 @@ export class MainComponent implements OnInit, OnDestroy {
 
   remove(node, component) {
     node.layoutVisible = false;
+    this.saveExpandedNodes();
     if (node.level === 0) {
-      this.removeObjIndex = this.dataSource.data.findIndex(v => v.name === node.node.name);
-      this.dataSource.data.splice(this.removeObjIndex, 1);
+      this.sectionRemoveIndex = this.dataSource.data.findIndex(v => v.name === node.node.name);
+      this.dataSource.data.splice(this.sectionRemoveIndex, 1);
     } else {
       if (component === 'section') {
         this.removeSection(node.node, this.dataSource.data);
       }
+      if (component === 'position') {
+        this.removePosition(node.node, this.dataSource.data);
+      }
     }
     this.appService.data$.next(this.dataSource.data);
+    this.restoreExpandedNodes();
   }
 
   removeSection(val, arr) {
     for (const i of arr) {
-      this.removeObjIndex = arr.findIndex(v => v.name === val.name);
-      if (this.removeObjIndex !== -1) {
-        arr.splice(this.removeObjIndex, 1);
+      this.sectionRemoveIndex = arr.findIndex(v => v.name === val.name);
+      if (this.sectionRemoveIndex !== -1) {
+        arr.splice(this.sectionRemoveIndex, 1);
       } else if (i.sections) {
         this.removeSection(val, i.sections);
       }
     }
   }
 
-  refreshTree(node) {
-    this.treeControl.collapse(node);
-    this.treeControl.expand(node);
+  removePosition(val, arr) {
+    for (const i of arr) {
+      if (i.items) {
+        this.positionRemoveItemIndex = i.items.findIndex(v => v.name === val.name);
+        this.positionRemoveItemInSectionIndex = i.sections.findIndex(v => v.name === val.name);
+        if (this.positionRemoveItemIndex !== -1 && this.positionRemoveItemInSectionIndex !== -1) {
+          i.items.splice(this.positionRemoveItemIndex, 1);
+          i.sections.splice(this.positionRemoveItemInSectionIndex, 1);
+        } else if (i.sections) {
+          this.removePosition(val, i.sections);
+        }
+      }
+    }
+  }
+
+  saveExpandedNodes() {
+    this.expandedNodes = new Array<Node>();
+    this.treeControl.dataNodes.forEach(node => {
+      if (node.expandable && this.treeControl.isExpanded(node)) {
+        this.expandedNodes.push(node);
+      }
+    });
+  }
+
+  restoreExpandedNodes() {
+    this.expandedNodes.forEach(node => {
+      this.treeControl.expand(this.treeControl.dataNodes.find(n => n.name === node.name));
+    });
   }
 
 
